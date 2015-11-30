@@ -1,19 +1,48 @@
 package com.droidwidgets;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
+import com.droidwidgets.listeners.OnPinSuccessListener;
+import com.droidwidgets.views.PinView;
 
-public class DroidWidgetsActivity extends ActionBarActivity {
+/**
+ * Activity showing simple use of various custom widgets
+ */
+public class DroidWidgetsActivity extends ActionBarActivity implements OnPinSuccessListener {
+
+    private LinearLayout mPinViewParent = null;
+    private PinView mPinView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_droid_widgets);
+
+        addPinView();
     }
 
+    /**
+     * Adds PinView to the activity's content layout
+     */
+    private void addPinView() {
+        mPinViewParent = (LinearLayout) findViewById(R.id.droid_widgets_root_layout);
+
+        // Instantiate PinView and add it to the activity's content layout
+        mPinView = new PinView(this, this);
+        mPinView.setBackgroundColor(Color.TRANSPARENT);
+        LinearLayout.LayoutParams pinViewParams = new LinearLayout.LayoutParams((int) getResources().getDimension(
+                R.dimen.pin_entry_width), (int) getResources().getDimension(R.dimen.pin_entry_height));
+//        pinViewParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        pinViewParams.gravity = Gravity.CENTER_HORIZONTAL;
+        mPinView.setLayoutParams(pinViewParams);
+        mPinViewParent.addView(mPinView);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,5 +61,10 @@ public class DroidWidgetsActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void pinSuccess(String iPinContent) {
+        // TODO Action once Pin Entry is completed . Like comparison against a String
     }
 }
